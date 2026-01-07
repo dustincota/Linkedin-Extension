@@ -1,13 +1,46 @@
 # LinkedIn Outreach Manager
 
-A powerful Chrome extension for managing LinkedIn connections, outreach campaigns, and building an unlimited contact database. Similar to Claude's extension architecture but customized specifically for LinkedIn networking and business development.
+A powerful Chrome extension for managing LinkedIn connections, outreach campaigns, and building an unlimited contact database. **PLUS** a custom Claude skill for AI-powered LinkedIn automation!
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+## 🎯 Two Tools in One Repository
+
+This repo contains:
+1. **LinkedIn Outreach Manager Extension** - Database for storing unlimited contacts
+2. **Claude Automation Skill** - AI assistant that automates LinkedIn tasks for you
+
+Use them separately OR together for maximum power!
+
+## Quick Start
+
+**Want AI Automation?** → See [.claude/SETUP.md](.claude/SETUP.md) for Claude skill setup
+
+**Want Manual Database?** → Continue reading for extension installation
+
 ## Features
 
-### 🎯 Core Features
+### 🤖 NEW: Claude Automation Skill
+
+**Talk to Claude and automate LinkedIn tasks:**
+- "Find 20 marketing managers and connect with them"
+- "Message everyone I connected with this week"
+- "Research [person] before my meeting"
+- "Build a list of 50 CTOs in AI startups"
+
+**Features:**
+- ✅ Automated connection requests with personalized notes
+- ✅ Smart messaging with personalization
+- ✅ Profile research and data extraction
+- ✅ Built-in safety limits (20-50 actions/day)
+- ✅ Respects LinkedIn's terms of service
+
+**Setup:** Install Claude's Chrome extension + load the skill file. [Full instructions](.claude/SETUP.md)
+
+---
+
+### 🎯 LinkedIn Outreach Manager Extension Features
 
 - **Profile Capture**: One-click capture of LinkedIn profiles with all relevant information
 - **Unlimited Database**: Store unlimited contacts using IndexedDB with no size restrictions
