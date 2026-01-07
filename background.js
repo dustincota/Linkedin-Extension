@@ -371,7 +371,7 @@ class LinkedInDatabase {
 const db = new LinkedInDatabase();
 let isInitialized = false;
 
-// Initialize database on install
+// Initialize database and context menu on install
 chrome.runtime.onInstalled.addListener(async () => {
   console.log('LinkedIn Outreach Manager installed');
   await initializeDB();
@@ -381,6 +381,14 @@ chrome.runtime.onInstalled.addListener(async () => {
   await db.setSetting('captureConnections', false);
   await db.setSetting('dailyLimit', 20);
   await db.setSetting('actionDelay', 5);
+
+  // Create context menu
+  chrome.contextMenus.create({
+    id: 'captureProfile',
+    title: 'Capture LinkedIn Profile',
+    contexts: ['page'],
+    documentUrlPatterns: ['https://www.linkedin.com/*']
+  });
 });
 
 // Initialize database
@@ -667,16 +675,7 @@ async function setSetting(key, value) {
   }
 }
 
-// Context menu for quick actions on LinkedIn
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'captureProfile',
-    title: 'Capture LinkedIn Profile',
-    contexts: ['page'],
-    documentUrlPatterns: ['https://www.linkedin.com/*']
-  });
-});
-
+// Context menu click handler
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'captureProfile') {
     chrome.tabs.sendMessage(tab.id, { action: 'captureCurrentProfile' });
