@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn AI Assistant</title>
+  <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+  <div class="chat-container">
+    <!-- Header -->
+    <header class="chat-header">
+      <div class="header-content">
+        <div class="logo">
+          <span class="logo-icon">🤖</span>
+          <h1>LinkedIn AI Assistant</h1>
+        </div>
+        <div class="status-indicator">
+          <span class="status-dot" id="statusDot"></span>
+          <span class="status-text" id="statusText">Ready</span>
+        </div>
+      </div>
+      <div class="agent-status" id="agentStatus">
+        <div class="agent-pill" data-agent="scout">Scout: <span>Idle</span></div>
+        <div class="agent-pill" data-agent="researcher">Researcher: <span>Idle</span></div>
+        <div class="agent-pill" data-agent="writer">Writer: <span>Idle</span></div>
+        <div class="agent-pill" data-agent="connector">Connector: <span>Idle</span></div>
+        <div class="agent-pill" data-agent="analyst">Analyst: <span>Idle</span></div>
+      </div>
+    </header>
+
+    <!-- Messages Area -->
+    <div class="messages-container" id="messagesContainer">
+      <div class="welcome-message">
+        <div class="welcome-icon">👋</div>
+        <h2>Welcome to LinkedIn AI Assistant</h2>
+        <p>I can help you automate LinkedIn networking with intelligent AI agents.</p>
+
+        <div class="example-prompts">
+          <p>Try saying:</p>
+          <button class="example-btn" data-prompt="Find 10 product managers in AI startups">
+            "Find 10 product managers in AI startups"
+          </button>
+          <button class="example-btn" data-prompt="Connect with 20 software engineers in San Francisco">
+            "Connect with 20 software engineers in San Francisco"
+          </button>
+          <button class="example-btn" data-prompt="Build me a network of 50 marketing leaders">
+            "Build me a network of 50 marketing leaders"
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="input-container">
+      <div class="input-wrapper">
+        <textarea
+          id="messageInput"
+          placeholder="Tell me what you want to do on LinkedIn..."
+          rows="1"
+        ></textarea>
+        <button id="sendButton" class="send-btn" disabled>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M2 10L18 2L12 18L10 11L2 10Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+      <div class="input-footer">
+        <div class="api-key-status" id="apiKeyStatus">
+          <span class="key-icon">🔑</span>
+          <span id="keyStatusText">No API key set</span>
+          <button id="setApiKeyBtn" class="link-btn">Configure</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Settings</h2>
+          <button class="close-btn" id="closeModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="apiKeyInput">Claude API Key</label>
+            <input type="password" id="apiKeyInput" placeholder="sk-ant-...">
+            <small>Get your API key from <a href="https://console.anthropic.com/settings/keys" target="_blank">Anthropic Console</a></small>
+          </div>
+
+          <div class="form-group">
+            <label for="dailyLimitInput">Daily Connection Limit</label>
+            <input type="number" id="dailyLimitInput" value="20" min="5" max="50">
+            <small>Recommended: 20-50 connections per day</small>
+          </div>
+
+          <div class="form-group">
+            <label for="userNameInput">Your Name</label>
+            <input type="text" id="userNameInput" placeholder="John Doe">
+          </div>
+
+          <div class="form-group">
+            <label for="userTitleInput">Your Title</label>
+            <input type="text" id="userTitleInput" placeholder="Product Manager">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="saveSettingsBtn" class="btn btn-primary">Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls" id="controls" style="display: none;">
+      <button class="control-btn" id="pauseBtn">⏸ Pause</button>
+      <button class="control-btn" id="resumeBtn" style="display: none;">▶ Resume</button>
+      <button class="control-btn danger" id="stopBtn">⏹ Stop</button>
+    </div>
+  </div>
+
+  <script src="chat.js"></script>
+</body>
+</html>

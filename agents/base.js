@@ -20,39 +20,38 @@ class BaseAgent {
     throw new Error(`${this.name} must implement execute() method`);
   }
 
-  // AI Decision Making - sends prompt to LLM
+  // AI Decision Making - sends prompt to Claude
   async think(prompt, context = {}) {
     try {
-      // Using OpenAI API (you can swap for Claude)
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      // Using Claude API (Anthropic)
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`
+          'x-api-key': this.apiKey,
+          'anthropic-version': '2023-06-01'
         },
         body: JSON.stringify({
-          model: 'gpt-4-turbo-preview',
+          model: 'claude-3-5-sonnet-20241022',
+          max_tokens: 4096,
+          system: this.getSystemPrompt(),
           messages: [
-            {
-              role: 'system',
-              content: this.getSystemPrompt()
-            },
             {
               role: 'user',
               content: prompt
             }
           ],
-          temperature: 0.7,
-          max_tokens: 2000
+          temperature: 0.7
         })
       });
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.statusText}`);
+        const error = await response.json();
+        throw new Error(`Claude API error: ${error.error?.message || response.statusText}`);
       }
 
       const data = await response.json();
-      return data.choices[0].message.content;
+      return data.content[0].text;
     } catch (error) {
       console.error(`${this.name} thinking error:`, error);
       throw error;
