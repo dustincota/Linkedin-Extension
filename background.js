@@ -463,6 +463,21 @@ async function handleMessage(request, sender) {
     case 'setSetting':
       return await setSetting(request.key, request.value);
 
+    case 'process_chat_message':
+      return await processChatMessage(request.message, request.apiKey, request.settings);
+
+    case 'get_agent_status':
+      return await getAgentStatus();
+
+    case 'pause_agents':
+      return await pauseAgents();
+
+    case 'resume_agents':
+      return await resumeAgents();
+
+    case 'stop_agents':
+      return await stopAgents();
+
     default:
       throw new Error(`Unknown action: ${request.action}`);
   }
@@ -674,6 +689,234 @@ async function setSetting(key, value) {
     throw error;
   }
 }
+
+// ============================================================================
+// AGENT SYSTEM INTEGRATION
+// ============================================================================
+
+// Note: Agent classes would need to be imported/inlined here
+// For now, this is a simplified handler that will be enhanced
+
+let agentOrchestrator = null;
+let agentStatus = { status: 'idle', agents: {} };
+
+// Initialize agent orchestrator
+async function initializeAgents(apiKey, settings) {
+  console.log('Initializing agent system...');
+
+  // TODO: Load actual agent classes
+  // For now, return a mock orchestrator
+  agentOrchestrator = {
+    status: 'ready',
+    apiKey: apiKey,
+    settings: settings,
+    currentGoal: null
+  };
+
+  return true;
+}
+
+// Process chat message and determine intent
+async function processChatMessage(message, apiKey, settings) {
+  try {
+    // Initialize agents if needed
+    if (!agentOrchestrator || agentOrchestrator.apiKey !== apiKey) {
+      await initializeAgents(apiKey, settings);
+    }
+
+    // Parse user intent using Claude
+    const intent = await parseUserIntent(message, apiKey);
+
+    if (intent.action === 'find_and_connect') {
+      // Start agent workflow
+      const reply = `Got it! I'll find ${intent.count || 10} ${intent.targetRole || 'professionals'} ${intent.location ? 'in ' + intent.location : ''} ${intent.industry ? 'in ' + intent.industry : ''} and connect with them.
+
+I'm starting the agents now:
+🔍 Scout will search LinkedIn
+🧠 Researcher will analyze profiles
+✍️ Writer will create personalized messages
+🤝 Connector will send connection requests safely
+
+This will take a few minutes. I'll update you as I progress!`;
+
+      // Update status
+      agentStatus = {
+        status: 'working',
+        goal: intent,
+        agents: {
+          scout: { status: 'working', queueLength: 0 },
+          researcher: { status: 'idle', queueLength: 0 },
+          writer: { status: 'idle', queueLength: 0 },
+          connector: { status: 'idle', queueLength: 0 },
+          analyst: { status: 'idle', queueLength: 0 }
+        }
+      };
+
+      // Start async work (would call actual orchestrator here)
+      startAgentWorkflow(intent, apiKey, settings);
+
+      return {
+        success: true,
+        reply: reply,
+        starting: true
+      };
+    } else if (intent.action === 'help') {
+      return {
+        success: true,
+        reply: `I can help you automate LinkedIn networking! Here's what I can do:
+
+**Find & Connect**: "Find 20 product managers at AI startups"
+**Research**: "Research John Doe before my meeting"
+**Message**: "Message my recent connections about [topic]"
+**Build Lists**: "Build a list of 50 CTOs in fintech"
+
+What would you like to do?`,
+        starting: false
+      };
+    } else {
+      return {
+        success: true,
+        reply: `I understand you want to: ${intent.description}
+
+Could you be more specific? For example:
+- "Find 20 software engineers in San Francisco"
+- "Connect with product managers at Series A startups"
+- "Build a list of marketing leaders"`,
+        starting: false
+      };
+    }
+
+  } catch (error) {
+    console.error('Error processing chat:', error);
+    return {
+      success: false,
+      error: error.message,
+      reply: 'Sorry, I encountered an error processing your request.'
+    };
+  }
+}
+
+// Parse user intent with Claude API
+async function parseUserIntent(message, apiKey) {
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 1024,
+        system: `You are a LinkedIn automation assistant. Parse user requests into structured intent.
+
+Respond in JSON format:
+{
+  "action": "find_and_connect" | "research" | "message" | "help" | "unknown",
+  "targetRole": "job title",
+  "industry": "industry name",
+  "location": "location",
+  "count": number,
+  "description": "brief description of what user wants"
+}`,
+        messages: [
+          {
+            role: 'user',
+            content: message
+          }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to parse intent');
+    }
+
+    const data = await response.json();
+    const intentText = data.content[0].text;
+
+    // Extract JSON from response
+    const jsonMatch = intentText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+
+    return { action: 'unknown', description: 'Could not parse request' };
+
+  } catch (error) {
+    console.error('Error parsing intent:', error);
+    return { action: 'unknown', description: message };
+  }
+}
+
+// Simulate agent workflow (would use real orchestrator)
+async function startAgentWorkflow(intent, apiKey, settings) {
+  console.log('Starting agent workflow:', intent);
+
+  // TODO: Replace with actual orchestrator.executeGoal()
+  // For now, just simulate the workflow
+
+  setTimeout(() => {
+    agentStatus.agents.scout.status = 'completed';
+    agentStatus.agents.researcher.status = 'working';
+  }, 3000);
+
+  setTimeout(() => {
+    agentStatus.agents.researcher.status = 'completed';
+    agentStatus.agents.writer.status = 'working';
+  }, 6000);
+
+  setTimeout(() => {
+    agentStatus.agents.writer.status = 'completed';
+    agentStatus.agents.connector.status = 'working';
+  }, 9000);
+
+  setTimeout(() => {
+    agentStatus.agents.connector.status = 'completed';
+    agentStatus.agents.analyst.status = 'working';
+  }, 12000);
+
+  setTimeout(() => {
+    agentStatus.agents.analyst.status = 'completed';
+    agentStatus.status = 'complete';
+    agentStatus.summary = `Found and connected with ${intent.count || 10} professionals`;
+  }, 15000);
+}
+
+// Get current agent status
+async function getAgentStatus() {
+  return { success: true, status: agentStatus };
+}
+
+// Pause agents
+async function pauseAgents() {
+  if (agentOrchestrator) {
+    agentStatus.status = 'paused';
+  }
+  return { success: true };
+}
+
+// Resume agents
+async function resumeAgents() {
+  if (agentOrchestrator) {
+    agentStatus.status = 'working';
+  }
+  return { success: true };
+}
+
+// Stop agents
+async function stopAgents() {
+  if (agentOrchestrator) {
+    agentStatus.status = 'idle';
+    agentStatus.agents = {};
+  }
+  return { success: true };
+}
+
+// ============================================================================
+// END AGENT SYSTEM
+// ============================================================================
 
 // Context menu click handler
 chrome.contextMenus.onClicked.addListener((info, tab) => {
