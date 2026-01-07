@@ -1,0 +1,15 @@
+/* Content Script Styles for LinkedIn Pages */
+
+#linkedin-outreach-fab {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.linkedin-outreach-notification {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Prevent conflicts with LinkedIn styles */
+#linkedin-outreach-fab *,
+.linkedin-outreach-notification * {
+  box-sizing: border-box;
+}

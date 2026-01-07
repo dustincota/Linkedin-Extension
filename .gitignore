@@ -1,0 +1,31 @@
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (if added later)
+node_modules/
+
+# Build files
+dist/
+build/
+
+# Test files
+coverage/
+
+# Temporary files
+*.tmp
+*.log
+
+# Personal data exports
+*-export-*.json
+
+# Generated icons (keep placeholders)
+icons/generate_icons.py
+icons/create-icons.html

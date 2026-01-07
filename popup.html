@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Outreach Manager</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>LinkedIn Outreach Manager</h1>
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-value" id="totalContacts">0</span>
+          <span class="stat-label">Contacts</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="totalOutreach">0</span>
+          <span class="stat-label">Outreach</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="totalConnections">0</span>
+          <span class="stat-label">Connected</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+      <button class="tab-btn" data-tab="contacts">Contacts</button>
+      <button class="tab-btn" data-tab="outreach">Outreach</button>
+      <button class="tab-btn" data-tab="settings">Settings</button>
+    </nav>
+
+    <main>
+      <!-- Dashboard Tab -->
+      <div class="tab-content active" id="dashboard">
+        <div class="action-card">
+          <h2>Quick Actions</h2>
+          <button class="btn btn-primary" id="captureProfile">
+            <span class="icon">👤</span> Capture Current Profile
+          </button>
+          <button class="btn btn-secondary" id="startOutreach">
+            <span class="icon">📤</span> Start Outreach Campaign
+          </button>
+          <button class="btn btn-secondary" id="exportData">
+            <span class="icon">💾</span> Export Database
+          </button>
+          <button class="btn btn-secondary" id="importData">
+            <span class="icon">📥</span> Import Database
+          </button>
+        </div>
+
+        <div class="recent-activity">
+          <h2>Recent Activity</h2>
+          <div id="activityList" class="activity-list">
+            <p class="empty-state">No recent activity</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contacts Tab -->
+      <div class="tab-content" id="contacts">
+        <div class="search-bar">
+          <input type="text" id="searchContacts" placeholder="Search contacts...">
+          <button class="btn btn-icon" id="refreshContacts">🔄</button>
+        </div>
+
+        <div class="filter-bar">
+          <select id="filterStatus">
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="connected">Connected</option>
+            <option value="rejected">Rejected</option>
+            <option value="not_contacted">Not Contacted</option>
+          </select>
+          <select id="filterCompany">
+            <option value="all">All Companies</option>
+          </select>
+        </div>
+
+        <div id="contactsList" class="contacts-list">
+          <p class="empty-state">No contacts yet. Start by capturing profiles on LinkedIn!</p>
+        </div>
+      </div>
+
+      <!-- Outreach Tab -->
+      <div class="tab-content" id="outreach">
+        <div class="outreach-form">
+          <h2>Create Outreach Campaign</h2>
+          <input type="text" id="campaignName" placeholder="Campaign Name">
+          <textarea id="messageTemplate" placeholder="Message Template (use {firstName}, {lastName}, {company} as placeholders)" rows="5"></textarea>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="autoConnect">
+              Auto-connect with contacts
+            </label>
+          </div>
+          <button class="btn btn-primary" id="saveCampaign">Save Campaign</button>
+        </div>
+
+        <div class="campaigns-list">
+          <h2>Active Campaigns</h2>
+          <div id="campaignsList">
+            <p class="empty-state">No campaigns yet</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div class="tab-content" id="settings">
+        <h2>Settings</h2>
+        <div class="settings-group">
+          <h3>Auto-Capture Settings</h3>
+          <label>
+            <input type="checkbox" id="autoCaptureProfiles">
+            Auto-capture profiles while browsing
+          </label>
+          <label>
+            <input type="checkbox" id="captureConnections">
+            Auto-capture from connections page
+          </label>
+        </div>
+
+        <div class="settings-group">
+          <h3>Outreach Settings</h3>
+          <label>
+            Daily connection limit:
+            <input type="number" id="dailyLimit" min="0" max="100" value="20">
+          </label>
+          <label>
+            Delay between actions (seconds):
+            <input type="number" id="actionDelay" min="1" max="60" value="5">
+          </label>
+        </div>
+
+        <div class="settings-group">
+          <h3>Data Management</h3>
+          <button class="btn btn-secondary" id="clearDatabase">Clear All Data</button>
+          <button class="btn btn-secondary" id="viewStats">View Database Stats</button>
+        </div>
+
+        <div class="settings-group">
+          <h3>About</h3>
+          <p>Version 1.0.0</p>
+          <p>LinkedIn Outreach Manager helps you manage connections and outreach campaigns with unlimited database storage.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <input type="file" id="importFileInput" accept=".json" style="display: none;">
+  <script src="popup.js"></script>
+</body>
+</html>
