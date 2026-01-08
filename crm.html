@@ -503,6 +503,94 @@
     </div>
   </div>
 
+  <!-- CSV Import Modal -->
+  <div class="modal" id="importModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Import Contacts</h2>
+        <button class="close-btn" id="closeImportModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="import-options">
+          <button class="import-option-card" onclick="selectImportMethod('csv')">
+            <div class="import-icon">📄</div>
+            <h3>CSV File Upload</h3>
+            <p>Upload CSV from Apollo.io, Instantly.ai, or any CRM</p>
+          </button>
+          <button class="import-option-card" onclick="selectImportMethod('apollo')">
+            <div class="import-icon">🚀</div>
+            <h3>Apollo.io API</h3>
+            <p>Direct search & import from Apollo's 275M+ database</p>
+          </button>
+        </div>
+
+        <!-- CSV Upload Section -->
+        <div id="csvUploadSection" class="import-section" style="display: none;">
+          <h3>Upload CSV File</h3>
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <p><strong>Drag & drop your CSV file here</strong></p>
+            <p style="color: var(--text-muted); font-size: 12px;">or click to browse</p>
+            <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+          </div>
+          <div class="csv-mapping" id="csvMapping" style="display: none;">
+            <h4>Map CSV Columns</h4>
+            <p style="color: var(--text-secondary); margin-bottom: 16px;">Match your CSV columns to our fields</p>
+            <div id="columnMappings"></div>
+          </div>
+          <div id="importPreview" style="display: none;">
+            <h4>Preview (first 5 rows)</h4>
+            <div id="previewTable"></div>
+            <div style="margin-top: 16px;">
+              <strong id="totalRowsCount"></strong>
+              <button class="btn btn-primary" id="confirmImportBtn" style="margin-left: 16px;">Import All Contacts</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Apollo.io API Section -->
+        <div id="apolloApiSection" class="import-section" style="display: none;">
+          <h3>Apollo.io Search & Import</h3>
+          <div class="form-group">
+            <label>Apollo.io API Key</label>
+            <input type="password" id="apolloApiKey" placeholder="Your Apollo API key">
+            <small>Get your API key from <a href="https://app.apollo.io/#/settings/integrations/api" target="_blank">Apollo Settings</a></small>
+          </div>
+          <div class="form-group">
+            <label>Search Query</label>
+            <input type="text" id="apolloSearchQuery" placeholder="e.g., HVAC Owner in California">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Job Titles</label>
+              <input type="text" id="apolloTitles" placeholder="Owner, CEO, Founder">
+            </div>
+            <div class="form-group">
+              <label>Location</label>
+              <input type="text" id="apolloLocation" placeholder="California, USA">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Industry</label>
+              <input type="text" id="apolloIndustry" placeholder="HVAC, Plumbing, Construction">
+            </div>
+            <div class="form-group">
+              <label>Max Results</label>
+              <input type="number" id="apolloMaxResults" value="1000" min="10" max="10000">
+            </div>
+          </div>
+          <button class="btn btn-primary" id="apolloSearchBtn">🔍 Search Apollo Database</button>
+          <div id="apolloResults" style="margin-top: 20px; display: none;">
+            <h4>Results: <span id="apolloResultCount"></span> contacts found</h4>
+            <div id="apolloPreview"></div>
+            <button class="btn btn-primary btn-large" id="apolloImportBtn">Import to CRM</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Settings Modal -->
   <div class="modal" id="settingsModal">
     <div class="modal-content">
@@ -517,6 +605,11 @@
             <label>Claude API Key</label>
             <input type="password" id="apiKeyInput" placeholder="sk-ant-...">
             <small>Get your key from <a href="https://console.anthropic.com/settings/keys" target="_blank">Anthropic Console</a></small>
+          </div>
+          <div class="form-group">
+            <label>Apollo.io API Key (Optional)</label>
+            <input type="password" id="apolloApiKeySettings" placeholder="Your Apollo API key">
+            <small>For direct database imports from Apollo.io</small>
           </div>
         </div>
         <div class="settings-section">

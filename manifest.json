@@ -13,7 +13,8 @@
   ],
   "host_permissions": [
     "https://www.linkedin.com/*",
-    "https://api.anthropic.com/*"
+    "https://api.anthropic.com/*",
+    "https://api.apollo.io/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -27,7 +28,7 @@
     }
   ],
   "action": {
-    "default_popup": "chat.html",
+    "default_popup": "crm.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
