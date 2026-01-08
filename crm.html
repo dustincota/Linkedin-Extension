@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn CRM - Outreach Platform</title>
+  <link rel="stylesheet" href="crm.css">
+</head>
+<body>
+  <div class="crm-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
+          <path d="M16 8L24 20H8L16 8Z" fill="white"/>
+          <defs>
+            <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
+              <stop offset="0%" stop-color="#667eea"/>
+              <stop offset="100%" stop-color="#764ba2"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <h1>LinkedIn CRM</h1>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#" class="nav-item active" data-page="dashboard">
+          <span class="icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" data-page="campaigns">
+          <span class="icon">🎯</span>
+          <span>Campaigns</span>
+          <span class="badge">2</span>
+        </a>
+        <a href="#" class="nav-item" data-page="contacts">
+          <span class="icon">👥</span>
+          <span>Contacts</span>
+          <span class="badge">247</span>
+        </a>
+        <a href="#" class="nav-item" data-page="sequences">
+          <span class="icon">📧</span>
+          <span>Sequences</span>
+        </a>
+        <a href="#" class="nav-item" data-page="inbox">
+          <span class="icon">💬</span>
+          <span>Inbox</span>
+          <span class="badge new">12</span>
+        </a>
+        <a href="#" class="nav-item" data-page="analytics">
+          <span class="icon">📈</span>
+          <span>Analytics</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="api-status">
+          <span class="status-dot connected" id="apiStatusDot"></span>
+          <span id="apiStatusText">API Connected</span>
+        </div>
+        <button class="btn-settings" id="settingsBtn">⚙️ Settings</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Dashboard Page -->
+      <div class="page active" id="dashboardPage">
+        <header class="page-header">
+          <div>
+            <h2>Dashboard</h2>
+            <p class="subtitle">Welcome back! Here's your outreach overview</p>
+          </div>
+          <button class="btn btn-primary" id="newCampaignBtn">
+            <span>➕</span> New Campaign
+          </button>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">👥</div>
+            <div class="stat-content">
+              <div class="stat-value" id="totalContacts">247</div>
+              <div class="stat-label">Total Contacts</div>
+              <div class="stat-change positive">+12 this week</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">📨</div>
+            <div class="stat-content">
+              <div class="stat-value" id="pendingRequests">43</div>
+              <div class="stat-label">Pending Requests</div>
+              <div class="stat-change">Awaiting response</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">✅</div>
+            <div class="stat-content">
+              <div class="stat-value" id="acceptanceRate">34%</div>
+              <div class="stat-label">Acceptance Rate</div>
+              <div class="stat-change positive">+5% vs last month</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">💬</div>
+            <div class="stat-content">
+              <div class="stat-value" id="activeConvos">18</div>
+              <div class="stat-label">Active Conversations</div>
+              <div class="stat-change">12 need response</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Campaigns -->
+        <div class="section">
+          <div class="section-header">
+            <h3>Active Campaigns</h3>
+            <a href="#" class="link" data-nav="campaigns">View all</a>
+          </div>
+          <div class="campaigns-list" id="activeCampaignsList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="section">
+          <div class="section-header">
+            <h3>Recent Activity</h3>
+          </div>
+          <div class="activity-feed" id="activityFeed">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Campaigns Page -->
+      <div class="page" id="campaignsPage">
+        <header class="page-header">
+          <div>
+            <h2>Campaigns</h2>
+            <p class="subtitle">Manage your outreach campaigns</p>
+          </div>
+          <button class="btn btn-primary" id="createCampaignBtn">
+            <span>➕</span> Create Campaign
+          </button>
+        </header>
+
+        <div class="campaigns-grid" id="campaignsGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Contacts Page -->
+      <div class="page" id="contactsPage">
+        <header class="page-header">
+          <div>
+            <h2>Contacts</h2>
+            <p class="subtitle">Your LinkedIn network database</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary" id="importContactsBtn">📥 Import</button>
+            <button class="btn btn-secondary" id="exportContactsBtn">📤 Export CSV</button>
+            <button class="btn btn-primary" id="addContactBtn">➕ Add Contact</button>
+          </div>
+        </header>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+          <div class="search-box">
+            <input type="text" id="contactSearch" placeholder="Search contacts...">
+            <span class="search-icon">🔍</span>
+          </div>
+          <select class="filter-select" id="stageFilter">
+            <option value="">All Stages</option>
+            <option value="new">New Lead</option>
+            <option value="contacted">Contacted</option>
+            <option value="connected">Connected</option>
+            <option value="engaged">Engaged</option>
+            <option value="qualified">Qualified</option>
+            <option value="customer">Customer</option>
+          </select>
+          <select class="filter-select" id="campaignFilter">
+            <option value="">All Campaigns</option>
+          </select>
+          <button class="btn btn-secondary" id="advancedFiltersBtn">🔧 More Filters</button>
+        </div>
+
+        <!-- Pipeline Board View Toggle -->
+        <div class="view-toggle">
+          <button class="view-btn active" data-view="table">📋 Table</button>
+          <button class="view-btn" data-view="board">📊 Board</button>
+        </div>
+
+        <!-- Table View -->
+        <div class="contacts-table-container" id="tableView">
+          <table class="contacts-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAll"></th>
+                <th>Name</th>
+                <th>Title</th>
+                <th>Company</th>
+                <th>Stage</th>
+                <th>Campaign</th>
+                <th>Last Contact</th>
+                <th>Score</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="contactsTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Board/Pipeline View -->
+        <div class="pipeline-board hidden" id="boardView">
+          <div class="pipeline-column" data-stage="new">
+            <div class="column-header">
+              <h4>New Leads</h4>
+              <span class="count">0</span>
+            </div>
+            <div class="pipeline-cards" data-stage="new">
+              <!-- Cards populated by JS -->
+            </div>
+          </div>
+          <div class="pipeline-column" data-stage="contacted">
+            <div class="column-header">
+              <h4>Contacted</h4>
+              <span class="count">0</span>
+            </div>
+            <div class="pipeline-cards" data-stage="contacted"></div>
+          </div>
+          <div class="pipeline-column" data-stage="connected">
+            <div class="column-header">
+              <h4>Connected</h4>
+              <span class="count">0</span>
+            </div>
+            <div class="pipeline-cards" data-stage="connected"></div>
+          </div>
+          <div class="pipeline-column" data-stage="engaged">
+            <div class="column-header">
+              <h4>Engaged</h4>
+              <span class="count">0</span>
+            </div>
+            <div class="pipeline-cards" data-stage="engaged"></div>
+          </div>
+          <div class="pipeline-column" data-stage="qualified">
+            <div class="column-header">
+              <h4>Qualified</h4>
+              <span class="count">0</span>
+            </div>
+            <div class="pipeline-cards" data-stage="qualified"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sequences Page -->
+      <div class="page" id="sequencesPage">
+        <header class="page-header">
+          <div>
+            <h2>Sequences</h2>
+            <p class="subtitle">Automated multi-touch outreach sequences</p>
+          </div>
+          <button class="btn btn-primary" id="newSequenceBtn">
+            <span>➕</span> New Sequence
+          </button>
+        </header>
+
+        <div class="sequences-list" id="sequencesList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Inbox Page -->
+      <div class="page" id="inboxPage">
+        <header class="page-header">
+          <h2>Inbox</h2>
+          <p class="subtitle">Manage LinkedIn conversations</p>
+        </header>
+
+        <div class="inbox-container">
+          <div class="conversations-list" id="conversationsList">
+            <!-- Populated by JS -->
+          </div>
+          <div class="conversation-view" id="conversationView">
+            <div class="empty-state">
+              <span class="empty-icon">💬</span>
+              <p>Select a conversation to view</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Page -->
+      <div class="page" id="analyticsPage">
+        <header class="page-header">
+          <h2>Analytics</h2>
+          <p class="subtitle">Track your outreach performance</p>
+        </header>
+
+        <div class="analytics-grid">
+          <div class="chart-card">
+            <h3>Connection Requests Over Time</h3>
+            <canvas id="requestsChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Acceptance Rate by Campaign</h3>
+            <canvas id="acceptanceChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Response Rate</h3>
+            <canvas id="responseChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Lead Sources</h3>
+            <canvas id="sourcesChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Campaign Builder Modal -->
+  <div class="modal" id="campaignModal">
+    <div class="modal-content large">
+      <div class="modal-header">
+        <h2>Create New Campaign</h2>
+        <button class="close-btn" id="closeCampaignModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="campaign-builder">
+          <!-- Step 1: Basic Info -->
+          <div class="builder-step active" data-step="1">
+            <h3>Campaign Details</h3>
+            <div class="form-group">
+              <label>Campaign Name *</label>
+              <input type="text" id="campaignName" placeholder="e.g., Home Service Owners Q1 2024">
+            </div>
+            <div class="form-group">
+              <label>Campaign Goal</label>
+              <select id="campaignGoal">
+                <option value="connections">Build Connections</option>
+                <option value="leads">Generate Leads</option>
+                <option value="partnerships">Find Partners</option>
+                <option value="hiring">Recruit Talent</option>
+                <option value="sales">Sales Outreach</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Daily Limit *</label>
+                <input type="number" id="campaignDailyLimit" value="10" min="1" max="50">
+                <small>Recommended: 10-20 per day</small>
+              </div>
+              <div class="form-group">
+                <label>Duration (days)</label>
+                <input type="number" id="campaignDuration" value="30" min="1" max="90">
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Targeting -->
+          <div class="builder-step" data-step="2">
+            <h3>Target Audience</h3>
+            <div class="form-group">
+              <label>Job Titles (comma separated)</label>
+              <input type="text" id="targetTitles" placeholder="Owner, Founder, CEO, President">
+            </div>
+            <div class="form-group">
+              <label>Industries (comma separated)</label>
+              <input type="text" id="targetIndustries" placeholder="Home Services, Construction, HVAC">
+            </div>
+            <div class="form-group">
+              <label>Keywords in Profile</label>
+              <input type="text" id="targetKeywords" placeholder="plumbing, electrical, HVAC, landscaping">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="targetLocation" placeholder="San Francisco Bay Area">
+              </div>
+              <div class="form-group">
+                <label>Company Size</label>
+                <select id="targetCompanySize">
+                  <option value="1-10">1-10 employees</option>
+                  <option value="11-50">11-50 employees</option>
+                  <option value="51-200">51-200 employees</option>
+                  <option value="201-500">201-500 employees</option>
+                  <option value="500+">500+ employees</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Messaging -->
+          <div class="builder-step" data-step="3">
+            <h3>Connection Message</h3>
+            <div class="form-group">
+              <label>Message Template</label>
+              <textarea id="connectionTemplate" rows="4" placeholder="Hi {firstName}, I noticed you run {company} in {location}...">Hi {firstName}, I noticed you run {company} in {location}. I work with home service business owners on [your value prop]. Would love to connect!</textarea>
+              <small>Available variables: {firstName}, {lastName}, {company}, {title}, {location}</small>
+            </div>
+            <div class="message-preview">
+              <strong>Preview:</strong>
+              <div class="preview-text" id="messagePreview">Hi John, I noticed you run ABC Plumbing in San Francisco...</div>
+            </div>
+          </div>
+
+          <!-- Step 4: Follow-up Sequence -->
+          <div class="builder-step" data-step="4">
+            <h3>Follow-up Sequence</h3>
+            <div class="sequence-builder">
+              <div class="sequence-step">
+                <div class="step-header">
+                  <strong>Step 1:</strong> Connection Accepted
+                </div>
+                <div class="form-group">
+                  <label>Wait Time</label>
+                  <select id="followup1Delay">
+                    <option value="24">24 hours</option>
+                    <option value="48">48 hours</option>
+                    <option value="72">72 hours</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Message</label>
+                  <textarea id="followup1Message" rows="3" placeholder="Thanks for connecting...">Thanks for connecting, {firstName}! I'd love to learn more about {company}. Are you open to a quick chat this week?</textarea>
+                </div>
+              </div>
+
+              <div class="sequence-step">
+                <div class="step-header">
+                  <strong>Step 2:</strong> No Response
+                  <label class="toggle">
+                    <input type="checkbox" id="enableFollowup2">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="form-group">
+                  <label>Wait Time</label>
+                  <select id="followup2Delay">
+                    <option value="3">3 days</option>
+                    <option value="5">5 days</option>
+                    <option value="7">7 days</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Message</label>
+                  <textarea id="followup2Message" rows="3" placeholder="Quick follow-up...">Quick follow-up, {firstName}. I recently helped a similar business achieve [result]. Would this be valuable for {company}?</textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5: Review & Launch -->
+          <div class="builder-step" data-step="5">
+            <h3>Review & Launch</h3>
+            <div class="campaign-summary">
+              <div class="summary-section">
+                <h4>Campaign Details</h4>
+                <p><strong>Name:</strong> <span id="reviewName"></span></p>
+                <p><strong>Goal:</strong> <span id="reviewGoal"></span></p>
+                <p><strong>Daily Limit:</strong> <span id="reviewDailyLimit"></span> requests/day</p>
+                <p><strong>Duration:</strong> <span id="reviewDuration"></span> days</p>
+                <p><strong>Total Target:</strong> <span id="reviewTotal"></span> connections</p>
+              </div>
+              <div class="summary-section">
+                <h4>Targeting</h4>
+                <p><strong>Titles:</strong> <span id="reviewTitles"></span></p>
+                <p><strong>Industries:</strong> <span id="reviewIndustries"></span></p>
+                <p><strong>Location:</strong> <span id="reviewLocation"></span></p>
+              </div>
+              <div class="summary-section">
+                <h4>Messaging</h4>
+                <p><strong>Connection note:</strong> Personalized template</p>
+                <p><strong>Follow-up steps:</strong> <span id="reviewFollowupSteps"></span></p>
+              </div>
+            </div>
+            <div class="launch-options">
+              <label class="checkbox-label">
+                <input type="checkbox" id="startNow">
+                <span>Start campaign immediately</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="skipWeekends" checked>
+                <span>Skip weekends (run Monday-Friday only)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="prevStepBtn" style="display:none;">← Previous</button>
+        <button class="btn btn-primary" id="nextStepBtn">Next →</button>
+        <button class="btn btn-primary btn-large" id="launchCampaignBtn" style="display:none;">🚀 Launch Campaign</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button class="close-btn" id="closeSettingsModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-section">
+          <h3>API Configuration</h3>
+          <div class="form-group">
+            <label>Claude API Key</label>
+            <input type="password" id="apiKeyInput" placeholder="sk-ant-...">
+            <small>Get your key from <a href="https://console.anthropic.com/settings/keys" target="_blank">Anthropic Console</a></small>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>Your Profile</h3>
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" id="userNameInput" placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label>Your Title</label>
+            <input type="text" id="userTitleInput" placeholder="Sales Director">
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>Safety Limits</h3>
+          <div class="form-group">
+            <label>Global Daily Limit</label>
+            <input type="number" id="globalDailyLimit" value="50" min="10" max="100">
+            <small>Maximum connection requests across all campaigns per day</small>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>Data Management</h3>
+          <button class="btn btn-secondary" id="exportAllBtn">📤 Export All Data</button>
+          <button class="btn btn-danger" id="clearDataBtn">🗑️ Clear All Data</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="crm.js"></script>
+</body>
+</html>
